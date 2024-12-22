@@ -8,19 +8,22 @@ const ViewSubject = () => {
     const { id } = useParams();
     const [enrolledSubject, setEnrolledSubject] = useState(null);
     const [error, setError] = useState(null);
-    const [grades, setGrades] = useState(null); // State to hold fetched grades
+    const [grades, setGrades] = useState(null);
+    const [gpa, setGPA] = useState(null);
 
+    // Fetch enrolled subject details
     useEffect(() => {
         const fetchEnrolledSubject = async () => {
             try {
                 const response = await axios.get(`/show-enrollment/${id}`);
                 if (response.data) {
                     setEnrolledSubject(response.data);
+                    setError(null); // Clear any previous errors
                 } else {
                     setError('No subject found.');
                 }
             } catch (e) {
-                setError(e.message || 'Failed to fetch enrolled subject.'); // Extract the error message
+                setError(e.message || 'Failed to fetch enrolled subject.');
             }
         };
 
@@ -29,22 +32,46 @@ const ViewSubject = () => {
         }
     }, [id]);
 
-    const fetchGrade = async (period_id) => {   
+    // Fetch grades for a specific period
+    const fetchGrade = async (period_id) => {
         try {
             const response = await axios.get(`/grade/${id}/${period_id}`);
-
             if (response.data) {
-                setGrades(response.data); // Update state with fetched grades
-                setError(response.data.message); // Clear any previous errors
+                setGrades(response.data);
+                setError(null); // Clear any previous errors
             } else {
                 setGrades(null);
-                setError(response.data.message);
+                setError('Failed to fetch grades.');
             }
         } catch (e) {
             setGrades(null);
-            setError(e.message || 'An error occurred while fetching grades.'); // Extract the error message
+            setError(e.message || 'An error occurred while fetching grades.');
         }
     };
+
+    // Fetch current GPA
+    const fetchCurrentGPA = async () => {
+        try {
+            const response = await axios.get(`/getGPA/${id}`);
+            if (response.data.GPA) {
+                setGPA(response.data.GPA);
+                setError(null); // Clear any previous errors
+            } else {
+                setGPA(null);
+                setError(response.data.message || 'Failed to fetch GPA.');
+            }
+        } catch (e) {
+            setGPA(null);
+            setError(e.message || 'An error occurred while fetching GPA.');
+        }
+    };
+
+    // Fetch GPA when component loads
+    useEffect(() => {
+        if (id) {
+            fetchCurrentGPA();
+        }
+    }, [id]);
 
     return (
         <div>
@@ -87,7 +114,11 @@ const ViewSubject = () => {
 
                 {/* GPA Section */}
                 <div className="mt-5 bg-green-700 py-2 pl-2 text-white text-md font-medium">
-                    <h1>Current GPA: </h1>
+                    {gpa !== null ? (
+                        <h1>Current GPA: {gpa}</h1>
+                    ) : (
+                        <h1>{error || 'No GPA available'}</h1>
+                    )}
                 </div>
 
                 {/* Grades Section */}
@@ -101,7 +132,7 @@ const ViewSubject = () => {
                     <div className="mt-5 bg-gray-200 p-4">
                         <h2 className="text-lg font-semibold">Fetched Grades:</h2>
                         <div>
-                            <p><strong>Name: </strong>{grades.user.firstname} <span>{grades.user.lastname}</span></p>
+                            <p><strong>Name:</strong> {grades.user.firstname} {grades.user.lastname}</p>
                             <p><strong>Grade:</strong> {grades.grade}</p>
                             <p><strong>Status:</strong> {grades.status}</p>
                             <p><strong>Faculty Name:</strong> {grades.faculty_name}</p>

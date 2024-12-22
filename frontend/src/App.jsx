@@ -4,6 +4,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
 import ViewSubject from './components/ViewSubject';
+import Feedback from './components/Feedback';
+import Profile from './components/Feedback';
 
 function App() {
   return (
@@ -26,6 +28,14 @@ function App() {
                 <Home />
               </ProtectedRoute>
             }
+          />
+          <Route 
+            path="/feedback/:id"
+            element={<Feedback/>}
+          />
+             <Route 
+            path="/profile/:id"
+            element={<Profile/>}
           />
           <Route
             path="/viewSubject/:id"
