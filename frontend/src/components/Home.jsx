@@ -5,18 +5,16 @@ import Header from './Header';
 import Greetings from './Greetings';
 import CardsGPA from './CardsGPA';
 import SubjectList from "./SubjectList";
-import Footer from './Footer';
 
 
 const Home = () => {
     const { id } = useParams();
-    const [user, setUser] = useState("");
+    const [user, setUser] = useState([]);
     const [subject, setSubject] = useState([]);
-    const [error, setError] = useState("");
-
+    const [error, setError] = useState("")
     const fetchUser = async() => {
         try {
-            const response = await axios.get(`user/${id}`);
+            const response = await axios.get(`profile-user/${id}`);
             setUser(response.data);
             
         }catch (err) { 
@@ -29,9 +27,7 @@ const Home = () => {
     },[id]);
 
 
-    // Fetch SUbjects
-
-
+    // Fetch SUbjectss
     const fetchSubject = async() => {
 
         try {
@@ -45,7 +41,7 @@ const Home = () => {
 
     return (
         <>
-            <Header />
+            <Header id={id}/>
             <div className="">
                 <div className="mt-5 px-3">
                     <Greetings 
@@ -64,9 +60,6 @@ const Home = () => {
                 <h5 className="px-3 mt-5">My Subjects</h5>
                 <div className="w-full flex justify-center">
                     <SubjectList id={id}/>
-                </div>
-                <div>
-                    <Footer active="home"/>  
                 </div>
             </div>
         </>

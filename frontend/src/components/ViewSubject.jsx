@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from '../api/axios';
-import Footer from './Footer';
 import GradesButton from './GradesButton';
+import BackButton from './BackButton';
 
 const ViewSubject = () => {
     const { id } = useParams();
@@ -66,7 +66,7 @@ const ViewSubject = () => {
         }
     };
 
-    // Fetch GPA when component loads
+    // Fetch GPA when componentads
     useEffect(() => {
         if (id) {
             fetchCurrentGPA();
@@ -80,6 +80,9 @@ const ViewSubject = () => {
                 <h1 className="text-white text-xl">Grading Application</h1>
             </div>
 
+            <div className='mt-5 ml-2'>
+                <BackButton />
+            </div>
             {/* Content */}
             <div className="px-2">
                 {/* Enrolled Subject Details */}
@@ -143,9 +146,6 @@ const ViewSubject = () => {
                 {/* Error Message */}
                 {error && <div className="text-red-500 mt-4">{error}</div>}
             </div>
-
-            {/* Footer */}
-            <Footer />
         </div>
     );
 };

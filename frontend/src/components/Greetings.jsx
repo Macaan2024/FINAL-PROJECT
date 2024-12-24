@@ -9,6 +9,4 @@ const Greetings = ({firstname, course, year}) => {
         </>
     ) 
 }
-
-
 export default Greetings;
